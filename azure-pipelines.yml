@@ -1,0 +1,28 @@
+trigger:
+- main
+
+variables:
+  imageName: azure-devops-webapp
+  acrName: merlinacr
+  acrLoginServer: merlinacr.azurecr.io
+  dockerTag: latest
+
+stages:
+- stage: BuildAndPush
+  displayName: Build & Push Docker Image
+  jobs:
+  - job: Build
+    displayName: Docker Build
+    pool:
+      vmImage: ubuntu-latest
+
+    steps:
+    - task: Docker@2
+      displayName: Build and Push Image
+      inputs:
+        containerRegistry: 'ACR-Service-Connection'
+        repository: $(imageName)
+        command: buildAndPush
+        Dockerfile: Dockerfile
+        tags: |
+          $(dockerTag)
